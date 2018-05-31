@@ -61,6 +61,7 @@ public class PropertiesUtils {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(savePath), "utf-8"));
             prop.load(br);
         } catch (Exception e) {
+            System.out.println("[配置文件加载异常]Properties configuration load file faild:");
 //            logger.error("[配置文件加载异常]Properties configuration load file faild:", e);
         }
         return prop;
