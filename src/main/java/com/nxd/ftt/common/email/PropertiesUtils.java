@@ -81,6 +81,7 @@ public class PropertiesUtils {
             Properties prop = getProperties();
             return prop.getProperty(key);
         } catch (Exception e) {
+            System.out.println("[配置文件加载异常]Properties configuration load file faild:");
 //            logger.error("[配置文件内容读取异常]Properties Failed to read the configuration file:", e);
         }
         return null;
