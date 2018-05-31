@@ -3,12 +3,14 @@ package com.nxd.ftt.common.util;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tools {
+
+    private static Pattern regex = Pattern.compile("^(((13[0-9])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8})|(0\\d{2}-\\d{8})|(0\\d{3}-\\d{7})$");
 
     /**
      * 随机生成六位数验证码
@@ -151,8 +153,8 @@ public class Tools {
     /**
      * 写txt里的单行内容
      *
-     * @param filePath 文件路径
-     * @param content  写入的内容
+     * @param fileP   文件路径
+     * @param content 写入的内容
      */
     public static void writeFile(String fileP, String content) {
         String filePath = String.valueOf(Thread.currentThread().getContextClassLoader().getResource("")) + "../../";    //项目路径
@@ -194,13 +196,13 @@ public class Tools {
     /**
      * 验证手机号码
      *
-     * @param mobiles
+     * @param mobileNumber
      * @return
      */
     public static boolean checkMobileNumber(String mobileNumber) {
         boolean flag = false;
         try {
-            Pattern regex = Pattern.compile("^(((13[0-9])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8})|(0\\d{2}-\\d{8})|(0\\d{3}-\\d{7})$");
+
             Matcher matcher = regex.matcher(mobileNumber);
             flag = matcher.matches();
         } catch (Exception e) {
@@ -213,7 +215,7 @@ public class Tools {
     /**
      * 读取txt里的单行内容
      *
-     * @param filePath 文件路径
+     * @param fileP 文件路径
      */
     public static String readTxtFile(String fileP) {
         try {
@@ -245,9 +247,43 @@ public class Tools {
         return "";
     }
 
-
     public static void main(String[] args) {
-        System.out.println(getRandomNum());
+        Map<String, String> map = new HashMap<>();
+        map.put("key1", "value1");
+        map.put("key2", "value2");
+        map.put("key3", "value3");
+        Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> i = it.next();
+            System.out.println(i.getKey());
+            System.out.println(i.getValue());
+        }
+        System.out.println("===========================");
+        map.forEach((key, value) -> {
+            System.out.println(key + "-------" + value);
+        });
+        ExecutorService executorService = new ThreadPoolExecutor(5, 10, 30, TimeUnit.MINUTES,
+                new LinkedBlockingQueue<>(), new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread thread = new Thread(r);
+                return thread;
+            }
+        });
+        executorService.execute(new Tools().new DemoThread());
+
+
     }
+
+    public class DemoThread implements Runnable {
+
+        @Override
+        public void run() {
+            System.out.println("thread1");
+        }
+    }
+
+
+//    ExecutorService executorService1 =
 
 }

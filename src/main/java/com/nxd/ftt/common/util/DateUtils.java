@@ -18,4 +18,8 @@ public class DateUtils {
         DateFormat df = new SimpleDateFormat(DAY_YEAR_MONTH_DAY_1);
         return df.format(new Date());
     }
+    public static String formateNowDay(String pattern){
+        DateFormat df = new SimpleDateFormat(pattern);
+        return df.format(new Date());
+    }
 }
