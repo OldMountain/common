@@ -22,7 +22,7 @@ public class Freemarker {
 
     private static void main(String[] args) {
         try {
-            generator();
+            generator(propPath);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (TemplateException e) {
@@ -108,7 +108,7 @@ public class Freemarker {
         FMUtils.map.put("table", list);
     }
 
-    public static void generator() throws ClassNotFoundException, TemplateException, SQLException, IOException {
+    public static void generator(String propPath) throws ClassNotFoundException, TemplateException, SQLException, IOException {
         init(propPath);
         createEntity();
         createDao();
