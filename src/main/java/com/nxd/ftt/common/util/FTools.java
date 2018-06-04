@@ -16,7 +16,13 @@ public class FTools {
      * @return
      */
     public static String getClassPath() {
-        return String.valueOf(Thread.currentThread().getContextClassLoader().getResource("/").getPath());
+        return getClassPath("/");
+    }
+
+    public static String getClassPath(String source) {
+//        String path = String.valueOf(Thread.currentThread().getContextClassLoader().getResource(source).getPath());
+
+        return String.valueOf(Thread.currentThread().getContextClassLoader().getResource(source).getPath()).replaceAll("%20", " ");
     }
 
     /**
@@ -168,7 +174,7 @@ public class FTools {
             str.append(div(div(size, 1024), 1024));
             str.append("M");
         } else {
-            str.append(div(div(div(size, 1024), 1024),1024));
+            str.append(div(div(div(size, 1024), 1024), 1024));
             str.append("G");
         }
         return str.toString();

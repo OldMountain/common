@@ -6,12 +6,12 @@ import com.nxd.ftt.common.util.FTools;
 import java.util.Date;
 
 /**
- * FileInfo
+ * BaseFile
  *
  * @author luhangqi
  * @date 2018/05/31
  */
-public class FileInfo {
+public class BaseFile {
 
     /**
      *
@@ -31,9 +31,7 @@ public class FileInfo {
     /**
      * 文件大小
      */
-    private Integer fileSize;
-
-    private String fileSizeStr;
+    private long fileSize;
 
     /**
      * 保存路径
@@ -71,10 +69,10 @@ public class FileInfo {
     private String remark;
 
 
-    public FileInfo() {
+    public BaseFile() {
     }
 
-    public FileInfo(String fileName, Integer fileSize, String filePath, String etx) {
+    public BaseFile(String fileName, long fileSize, String filePath, String etx) {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.filePath = filePath;
@@ -111,7 +109,7 @@ public class FileInfo {
      *
      * @return fileSize
      */
-    public Integer getFileSize() {
+    public long getFileSize() {
         return fileSize;
     }
 
@@ -203,7 +201,7 @@ public class FileInfo {
     /**
      * 文件大小
      */
-    public void setFileSize(Integer fileSize) {
+    public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
 
@@ -256,16 +254,4 @@ public class FileInfo {
         this.remark = remark;
     }
 
-    @Override
-    public String toString() {
-        return new Gson().toJson(this);
-    }
-
-    public String getFileSizeStr() {
-        return fileSize != null ? FTools.getFileSize((long) fileSize) : "0";
-    }
-
-    public void setFileSizeStr(String fileSizeStr) {
-        this.fileSizeStr = fileSizeStr;
-    }
 }

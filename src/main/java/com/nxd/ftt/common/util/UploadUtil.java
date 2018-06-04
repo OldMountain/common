@@ -1,6 +1,6 @@
 package com.nxd.ftt.common.util;
 
-import com.nxd.ftt.common.entity.FileInfo;
+import com.nxd.ftt.common.entity.BaseFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.multipart.MultipartResolver;
@@ -29,11 +29,11 @@ public class UploadUtil {
      * @return
      * @throws IOException
      */
-    public static List<FileInfo> upload(HttpServletRequest request, String rootFolder, String folder) throws IOException {
+    public static List<BaseFile> upload(HttpServletRequest request, String rootFolder, String folder) throws IOException {
         MultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
         String path = folder + File.separator + DateUtils.formateNowDay("yyyyMMdd");
         File file = new File(rootFolder, path);
-        List<FileInfo> pathList = new ArrayList<>();
+        List<BaseFile> pathList = new ArrayList<>();
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -44,10 +44,11 @@ public class UploadUtil {
                 MultipartFile multipartFile = multipartRequest.getFile(fileNames.next());
                 if (multipartFile != null) {
                     String name = multipartFile.getOriginalFilename();
-                    File newFile = new File(file, UuidUtil.get32UUID());
+                    String etx = FTools.getEtx(name);
+                    File newFile = new File(file, UuidUtil.get32UUID() + "." + etx);
                     multipartFile.transferTo(newFile);
-                    FileInfo fileInfo = new FileInfo(FTools.getFileName(name), (int) multipartFile.getSize(), path, FTools.getEtx(name));
-                    pathList.add(fileInfo);
+                    BaseFile baseFile = new BaseFile(FTools.getFileName(name), multipartFile.getSize(), path + File.separator + newFile.getName(), etx);
+                    pathList.add(baseFile);
                 }
             }
         }
