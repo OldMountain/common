@@ -73,7 +73,7 @@ public class Freemarker {
 //        参数：tablename:表名称
 //        参数：type :表的类型(TABLE | VIEW)
 //        ResultSet tableResult = data.getTables(null, "mysql", prop.getProperty("table").toUpperCase(), new String[]{"TABLE"});
-        ResultSet key = data.getPrimaryKeys(con.getCatalog(), con.getSchema(), FMUtils.prop.getProperty("table").toUpperCase());
+        ResultSet key = data.getPrimaryKeys(con.getCatalog(), con.getSchema(), FMUtils.prop.getProperty("table"));
         String keyName = "";
         while (key.next()) {
             Table table = new Table();
@@ -81,7 +81,7 @@ public class Freemarker {
             keyName = table.getColumnName();
             FMUtils.map.put("primaryKey", table);
         }
-        ResultSet result = data.getColumns(con.getCatalog(), con.getSchema(), FMUtils.prop.getProperty("table").toUpperCase(), "%");
+        ResultSet result = data.getColumns(con.getCatalog(), con.getSchema(), FMUtils.prop.getProperty("table"), "%");
         while (result.next()) {
             Table table = new Table();
             table.setColumnName(result.getString("COLUMN_NAME"));
@@ -110,6 +110,8 @@ public class Freemarker {
 
     public static void generator(String propPath) throws ClassNotFoundException, TemplateException, SQLException, IOException {
         init(propPath);
+        //建立数据模型（Map）
+        setData();
         createEntity();
         createDao();
         createMapper();
@@ -240,12 +242,13 @@ public class Freemarker {
      * @throws ClassNotFoundException
      */
     private static void create(String temp, String fileName, String path) {
+        if(path == null || "".equals(path)){
+            return;
+        }
         Template template;
         Writer out = null;
         try {
             template = FMUtils.cfg.getTemplate(temp);
-            //建立数据模型（Map）
-            setData();
             //获取输出流（指定到控制台（标准输出））
             File file = new File(path, fileName);
             if (!file.exists()) {
@@ -258,10 +261,6 @@ public class Freemarker {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (TemplateException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             try {
