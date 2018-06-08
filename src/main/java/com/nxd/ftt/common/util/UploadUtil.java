@@ -25,7 +25,8 @@ public class UploadUtil {
      * 文件上传
      *
      * @param request
-     * @param folder
+     * @param rootFolder 文件上传根目录
+     * @param folder 文件保存位置
      * @return
      * @throws IOException
      */
