@@ -7,13 +7,15 @@
  * @date 2015-3-1 下午3:21:15
  * @version V1.0
  */
-package com.nxd.ftt.common.email;
+package com.nxd.ftt.common.util;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 /**
  * @author Havebugs-John
@@ -25,6 +27,9 @@ import java.util.ResourceBundle;
  */
 public class PropertiesUtils {
     // 日志管理
+    private static final Logger logger = LoggerFactory.getLogger(PropertiesUtils.class);
+
+    private static final Properties prop = new Properties();
 
     /**
      * getProperties(这里用一句话描述这个方法的作用)
@@ -35,36 +40,33 @@ public class PropertiesUtils {
      * @Title: getProperties
      */
     public static Properties getProperties() {
-        Properties prop = new Properties();
-        String savePath = PropertiesUtils.class.getResource("/config.properties").getPath();
+//        Properties prop = new Properties();
         // 以下方法读取属性文件会缓存问题
         // InputStream in = PropertiesUtils.class
         // .getResourceAsStream("/config.properties");
+        InputStream in = null;
         try {
-            InputStream in = new BufferedInputStream(new FileInputStream(savePath));
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(savePath), "utf-8"));
-            prop.load(br);
+            if (prop.isEmpty()) {
+//                String savePath = PropertiesUtils.class.getResource("/config.properties").getPath();
+                String savePath = FTools.getClassPath("/config.properties");
+                in = new BufferedInputStream(new FileInputStream(savePath));
+                prop.load(in);
+            }
         } catch (Exception e) {
-//            logger.error("[配置文件加载异常]Properties configuration load file faild:", e);
+            logger.error("[配置文件加载异常]Properties configuration load file faild:", e);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return prop;
     }
 
-    public static Properties getProperties(String fileName) {
-        Properties prop = new Properties();
-        String savePath = PropertiesUtils.class.getResource("/" + fileName).getPath();
-        // 以下方法读取属性文件会缓存问题
-        // InputStream in = PropertiesUtils.class
-        // .getResourceAsStream("/config.properties");
-        try {
-            InputStream in = new BufferedInputStream(new FileInputStream(savePath));
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(savePath), "utf-8"));
-            prop.load(br);
-        } catch (Exception e) {
-            System.out.println("[配置文件加载异常]Properties configuration load file faild:");
-//            logger.error("[配置文件加载异常]Properties configuration load file faild:", e);
-        }
-        return prop;
+    public static Properties getProperties(String fileName){
+        Properties properties = new Properties();
+        return properties;
     }
 
     /**
@@ -78,21 +80,12 @@ public class PropertiesUtils {
      */
     public static String findPropertiesKey(String key) {
         try {
-            Properties prop = getProperties();
+            if (prop.isEmpty()) {
+                getProperties();
+            }
             return prop.getProperty(key);
         } catch (Exception e) {
-            System.out.println("[配置文件加载异常]Properties configuration load file faild:");
-//            logger.error("[配置文件内容读取异常]Properties Failed to read the configuration file:", e);
-        }
-        return null;
-    }
-
-    public static String findPropertiesKey(String key, String fileName) {
-        try {
-            Properties prop = getProperties(fileName);
-            return prop.getProperty(key);
-        } catch (Exception e) {
-//            logger.error("[配置文件内容读取异常]Properties Failed to read the configuration file:", e);
+            logger.error("[配置文件内容读取异常]Properties Failed to read the configuration file:", e);
         }
         return null;
     }
@@ -117,9 +110,10 @@ public class PropertiesUtils {
             outputFile.flush();
             outputFile.close();
         } catch (Exception e) {
-//            logger.error("[配置文件内容修改异常]To modify the configuration file to fail:", e);
+            logger.error("[配置文件内容修改异常]To modify the configuration file to fail:", e);
         }
     }
+
 
     public static void main(String[] args) {
         Properties prop = new Properties();
@@ -134,10 +128,5 @@ public class PropertiesUtils {
         } catch (Exception e) {
 
         }
-    }
-
-    public static String getPropertiesKey(String key) {
-        ResourceBundle rb = ResourceBundle.getBundle("config.properties");
-        return rb.getString(key);
     }
 }

@@ -3,6 +3,7 @@ package com.nxd.ftt.common.email;
 import com.nxd.ftt.common.entity.email.Email;
 import com.nxd.ftt.common.entity.email.Image;
 import com.nxd.ftt.common.exception.CommonException;
+import com.nxd.ftt.common.util.PropertiesUtils;
 import com.sun.mail.smtp.SMTPTransport;
 
 import javax.activation.DataHandler;
@@ -25,6 +26,15 @@ import java.util.Properties;
  * @date 2017/12/7
  */
 public class EmailUtil {
+
+
+    public static void send(Email email) throws IOException, MessagingException {
+        send(email, null, false);
+    }
+
+    public static void send(Email email, Image image) throws IOException, MessagingException {
+        send(email, image, false);
+    }
 
     public static void send(Email email, Image image, boolean all) throws IOException, MessagingException {
         Properties props = PropertiesUtils.getProperties("mail.properties");
