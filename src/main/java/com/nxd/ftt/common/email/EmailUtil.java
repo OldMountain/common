@@ -28,15 +28,15 @@ import java.util.Properties;
 public class EmailUtil {
 
 
-    public static void send(Email email) throws IOException, MessagingException {
+    public static void send(Email email) throws IOException, MessagingException, CommonException {
         send(email, null, false);
     }
 
-    public static void send(Email email, Image image) throws IOException, MessagingException {
+    public static void send(Email email, Image image) throws IOException, MessagingException, CommonException {
         send(email, image, false);
     }
 
-    public static void send(Email email, Image image, boolean all) throws IOException, MessagingException {
+    public static void send(Email email, Image image, boolean all) throws IOException, MessagingException, CommonException {
         Properties props = PropertiesUtils.getProperties("mail.properties");
         // 根据参数配置，创建会话对象（为了发送邮件准备的）
         Authenticator authenticator = new Authenticator() {
@@ -98,7 +98,7 @@ public class EmailUtil {
 
 
     //创建邮件
-    public static MimeMessage createMail(MimeMessage message, Email email, Image image, Properties props) throws UnsupportedEncodingException, MessagingException {
+    public static MimeMessage createMail(MimeMessage message, Email email, Image image, Properties props) throws UnsupportedEncodingException, MessagingException, CommonException {
         // 1. 创建一封邮件
         // 用于连接邮件服务器的参数配置（发送邮件时才需要用到）
         String key = email.getKey();

@@ -66,6 +66,21 @@ public class PropertiesUtils {
 
     public static Properties getProperties(String fileName){
         Properties properties = new Properties();
+        InputStream in = FTools.getStream(fileName);
+        InputStreamReader read = null;
+        try {
+            read = new InputStreamReader(in, "UTF-8");
+            properties.load(read);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                in.close();
+                read.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return properties;
     }
 

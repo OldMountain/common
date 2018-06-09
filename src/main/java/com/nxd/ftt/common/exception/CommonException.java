@@ -9,7 +9,7 @@ import java.io.PrintWriter;
  * @author luhangqi
  * @date 2017/12/7
  */
-public class CommonException extends RuntimeException {
+public class CommonException extends Exception {
 
     public CommonException(String message) {
         super(message);

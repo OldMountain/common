@@ -1,5 +1,6 @@
 package com.nxd.ftt.common.util;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 
 /**
@@ -23,6 +24,10 @@ public class FTools {
 //        String path = String.valueOf(Thread.currentThread().getContextClassLoader().getResource(source).getPath());
 
         return String.valueOf(Thread.currentThread().getContextClassLoader().getResource(source).getPath()).replaceAll("%20", " ");
+    }
+
+    public static InputStream getStream(String source){
+        return Thread.currentThread().getContextClassLoader().getResourceAsStream(source);
     }
 
     /**

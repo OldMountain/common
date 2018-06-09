@@ -46,14 +46,16 @@ public class URLUtil {
         return link.substring(link.lastIndexOf("/") + 1);
     }
 
-    public static String download(String fileDir, String link) throws IOException {
+    public static String download(String fileDir, String link) throws IOException, CommonException {
         String fileName = getFileName(link);
         File file = new File(fileDir, fileName);
         if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdir();
+            file.getParentFile().mkdirs();
         }
         if (file.exists()) {
-            new CommonException("文件已存在");
+            throw new CommonException("文件已存在");
+        }else{
+            file.createNewFile();
         }
         URL url = new URL(link);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
