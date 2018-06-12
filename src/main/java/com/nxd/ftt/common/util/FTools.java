@@ -26,7 +26,7 @@ public class FTools {
         return String.valueOf(Thread.currentThread().getContextClassLoader().getResource(source).getPath()).replaceAll("%20", " ");
     }
 
-    public static InputStream getStream(String source){
+    public static InputStream getStream(String source) {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(source);
     }
 
@@ -153,12 +153,9 @@ public class FTools {
      */
     public static String getFileName(String fileName) {
         String etx;
-        int index = fileName.lastIndexOf(".");
-        if (index > 0) {
-            etx = fileName.substring(0, index);
-        } else {
-            etx = fileName;
-        }
+        int start = fileName.lastIndexOf("/");
+        int end = fileName.lastIndexOf(".");
+        etx = fileName.substring(start == -1 ? 0 : start + 1, end == -1 ? fileName.length() : end);
         return etx;
     }
 
