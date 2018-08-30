@@ -2,7 +2,7 @@ package com.nxd.ftt.common.freemarker;
 
 public enum TempEnum {
     ENTITY("entity","Entity")
-    ,DAO("dao","Dao")
+    ,DAO("dao","Mapper")
     ,MAPPER("mapper","Mapper")
     ,SERVICE("service","Service")
     ,IMPL("impl","ServiceImpl")

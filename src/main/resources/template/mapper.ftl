@@ -6,7 +6,7 @@
         <result column="${row.columnName}" property="${row.filedName}"/>
       </#list>
     </resultMap>
-    <select id="select" parameterType="${entityPackage + "."}${entity}" resultMap="BaseResultMap">
+    <select id="list" parameterType="${entityPackage + "."}${entity}" resultMap="BaseResultMap">
         select
         <trim suffixOverrides=",">
           <#list table as row>
@@ -22,7 +22,7 @@
             </#list>
         </where>
     </select>
-    <select id="selectById" parameterType="${entityPackage + "."}${entity}" resultMap="BaseResultMap">
+    <select id="findById" parameterType="${entityPackage + "."}${entity}" resultMap="BaseResultMap">
         select
         <trim suffixOverrides=",">
           <#list table as row>
