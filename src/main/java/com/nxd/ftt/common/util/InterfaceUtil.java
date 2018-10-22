@@ -33,6 +33,7 @@ public class InterfaceUtil
 	 */
 	static {
 		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+			@Override
 			public boolean verify(String hostname, SSLSession session) {
 				return true;
 			}

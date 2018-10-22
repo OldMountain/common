@@ -9,12 +9,8 @@
  */
 package com.nxd.ftt.common.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
-import java.util.Iterator;
-import java.util.Map.Entry;
+import java.text.MessageFormat;
 import java.util.Properties;
 
 /**
@@ -26,8 +22,6 @@ import java.util.Properties;
  * @date 2015-3-1 下午3:30:32
  */
 public class PropertiesUtils {
-    // 日志管理
-    private static final Logger logger = LoggerFactory.getLogger(PropertiesUtils.class);
 
     private static final Properties prop = new Properties();
 
@@ -40,20 +34,15 @@ public class PropertiesUtils {
      * @Title: getProperties
      */
     public static Properties getProperties() {
-//        Properties prop = new Properties();
-        // 以下方法读取属性文件会缓存问题
-        // InputStream in = PropertiesUtils.class
-        // .getResourceAsStream("/config.properties");
         InputStream in = null;
         try {
             if (prop.isEmpty()) {
-//                String savePath = PropertiesUtils.class.getResource("/config.properties").getPath();
-                String savePath = FTools.getClassPath("/config.properties");
+                String savePath = FTools.getClassPath("config.properties");
                 in = new BufferedInputStream(new FileInputStream(savePath));
                 prop.load(in);
             }
         } catch (Exception e) {
-            logger.error("[配置文件加载异常]Properties configuration load file faild:", e);
+            e.printStackTrace();
         } finally {
             try {
                 in.close();
@@ -64,7 +53,7 @@ public class PropertiesUtils {
         return prop;
     }
 
-    public static Properties getProperties(String fileName){
+    public static Properties getProperties(String fileName) {
         Properties properties = new Properties();
         InputStream in = FTools.getStream(fileName);
         InputStreamReader read = null;
@@ -73,7 +62,7 @@ public class PropertiesUtils {
             properties.load(read);
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 in.close();
                 read.close();
@@ -100,7 +89,24 @@ public class PropertiesUtils {
             }
             return prop.getProperty(key);
         } catch (Exception e) {
-            logger.error("[配置文件内容读取异常]Properties Failed to read the configuration file:", e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String findProperty(String key, String... strings) {
+        try {
+            if (prop.isEmpty()) {
+                getProperties();
+            }
+            String property = prop.getProperty(key);
+            if (strings != null && strings.length > 0) {
+                MessageFormat mf = new MessageFormat(property);
+                property = mf.format(strings);
+            }
+            return property;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -125,23 +131,8 @@ public class PropertiesUtils {
             outputFile.flush();
             outputFile.close();
         } catch (Exception e) {
-            logger.error("[配置文件内容修改异常]To modify the configuration file to fail:", e);
+            e.printStackTrace();
         }
     }
 
-
-    public static void main(String[] args) {
-        Properties prop = new Properties();
-        InputStream in = PropertiesUtils.class.getResourceAsStream("/config.properties");
-        try {
-            prop.load(in);
-            Iterator<Entry<Object, Object>> itr = prop.entrySet().iterator();
-            while (itr.hasNext()) {
-                Entry<Object, Object> e = (Entry<Object, Object>) itr.next();
-                System.err.println((e.getKey().toString() + "" + e.getValue().toString()));
-            }
-        } catch (Exception e) {
-
-        }
-    }
 }

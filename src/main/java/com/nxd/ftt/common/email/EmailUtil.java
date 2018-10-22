@@ -32,6 +32,7 @@ public class EmailUtil {
         send(email, null, false);
     }
 
+
     public static void send(Email email, Image image) throws IOException, MessagingException, CommonException {
         send(email, image, false);
     }

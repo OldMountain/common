@@ -1,7 +1,5 @@
 package com.nxd.ftt.common.util;
 
-import com.nxd.ftt.common.exception.CommonException;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,9 +12,23 @@ import java.util.regex.Pattern;
  * @author luhangqi
  * @date 2018/6/8
  */
-public class URLUtil {
+public abstract class URLUtil {
 
-    public static String getDownloadUrl(String url, Pattern pattern) throws IOException {
+    /**
+     * 下载之前
+     * @param contentLength 文件大小
+     * @param file 输出文件
+     */
+    public abstract void before(int contentLength,File file);
+
+    public abstract void after(File file);
+
+    /**
+     * 下载进度
+     */
+    public abstract void progress(Long read);
+
+    public String getDownloadUrl(String url, Pattern pattern) throws IOException {
         URL URL = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) URL.openConnection();
         connection.connect();
@@ -42,19 +54,22 @@ public class URLUtil {
         return g;
     }
 
-    public static String getFileName(String link) {
+    public String getFileName(String link) {
         return link.substring(link.lastIndexOf("/") + 1);
     }
 
-    public static String download(String fileDir, String link) throws IOException, CommonException {
+    public File download(String fileDir, String link) throws IOException {
         String fileName = getFileName(link);
+        return download(fileDir, link, fileName);
+    }
+
+    public File download(String fileDir, String link, String fileName) throws IOException {
+
         File file = new File(fileDir, fileName);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        if (file.exists()) {
-            throw new CommonException("文件已存在");
-        }else{
+        if (!file.exists()) {
             file.createNewFile();
         }
         URL url = new URL(link);
@@ -64,14 +79,19 @@ public class URLUtil {
         connection.setDoInput(true);
         connection.setDoOutput(true);
         connection.connect();
+        int contentLength = connection.getContentLength();
+        before(contentLength,file);
         InputStream in = connection.getInputStream();
         BufferedInputStream bfi = new BufferedInputStream(in);
         FileOutputStream out = new FileOutputStream(file);
         BufferedOutputStream bfo = new BufferedOutputStream(out);
         byte[] b = new byte[1024];
         int c;
+        Long read = 0L;
         while ((c = bfi.read(b)) > 0) {
             bfo.write(b, 0, c);
+            read += c;
+            progress(read);
         }
         out.flush();
         in.close();
@@ -79,6 +99,8 @@ public class URLUtil {
         out.close();
         bfi.close();
         connection.disconnect();
-        return fileName;
+        after(file);
+        return file;
     }
+
 }

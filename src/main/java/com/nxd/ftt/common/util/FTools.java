@@ -17,12 +17,10 @@ public class FTools {
      * @return
      */
     public static String getClassPath() {
-        return getClassPath("/");
+        return getClassPath(".");
     }
 
     public static String getClassPath(String source) {
-//        String path = String.valueOf(Thread.currentThread().getContextClassLoader().getResource(source).getPath());
-
         return String.valueOf(Thread.currentThread().getContextClassLoader().getResource(source).getPath()).replaceAll("%20", " ");
     }
 
@@ -110,9 +108,6 @@ public class FTools {
     }
 
     public static String div(Object num1, Object num2, int scale) {
-        if (scale < 0) {
-            throw new IllegalArgumentException("精确位数不能小于0");
-        }
         if ("0".equals(String.valueOf(num2))) {
             throw new ArithmeticException("除数不能为0");
         }
@@ -120,7 +115,11 @@ public class FTools {
         BigDecimal numDec2 = new BigDecimal(String.valueOf(num2));
         BigDecimal result;
         try {
-            result = numDec1.divide(numDec2, scale, BigDecimal.ROUND_HALF_DOWN);
+            if (scale < 0) {
+                result = numDec1.divide(numDec2);
+            }else {
+                result = numDec1.divide(numDec2, scale, BigDecimal.ROUND_HALF_DOWN);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new ArithmeticException("除法异常");
@@ -165,18 +164,22 @@ public class FTools {
      * @param size
      * @return
      */
-    public static String getFileSize(long size) {
+    public static String getFileSize(long size){
+        return getFileSize(size, -1);
+    }
+
+    public static String getFileSize(long size,int scale) {
         StringBuilder str = new StringBuilder();
         if (size < 1024) {
             str.append("1K");
         } else if (size < 1024 * 1024) {
-            str.append(div(size, 1024));
+            str.append(div(size, 1024,scale));
             str.append("K");
         } else if (size < 1024 * 1024 * 1024) {
-            str.append(div(div(size, 1024), 1024));
+            str.append(div(div(size, 1024,scale), 1024,scale));
             str.append("M");
         } else {
-            str.append(div(div(div(size, 1024), 1024), 1024));
+            str.append(div(div(div(size, 1024,scale), 1024,scale), 1024,scale));
             str.append("G");
         }
         return str.toString();
