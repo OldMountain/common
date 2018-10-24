@@ -24,43 +24,39 @@ public class ${className} implements ${service} {
     /**
      * 查询列表
      * @return
-     * @throws SQLException
      */
     @Override
-    public List<${entity}> listAll() throws SQLException {
-       return ${dao?uncap_first}.select(new ${entity}());
+    public List<${entity}> listAll() {
+       return ${dao?uncap_first}.list(new ${entity}());
     }
 
     /**
      * 根据条件查询列表
      * @param ${entity?uncap_first}
      * @return
-     * @throws SQLException
      */
     @Override
-    public List<${entity}> list(${entity} ${entity?uncap_first}) throws SQLException {
-       return ${dao?uncap_first}.select(${entity?uncap_first});
+    public List<${entity}> list(${entity} ${entity?uncap_first}) {
+       return ${dao?uncap_first}.list(${entity?uncap_first});
     }
 
     /**
      * 根据${primaryKey.filedName}查询
      * @param ${primaryKey.filedName}
      * @return
-     * @throws SQLException
      */
     @Override
-    public ${entity} findById(${primaryKey.dataType} ${primaryKey.filedName}) throws SQLException {
-       return ${dao?uncap_first}.selectById(${primaryKey.filedName});
+    public ${entity} findById(${primaryKey.dataType} ${primaryKey.filedName}) {
+       return ${dao?uncap_first}.findById(${primaryKey.filedName});
     }
 
     /**
      * 根据条件修改
      * @param ${entity?uncap_first}
      * @return
-     * @throws SQLException
      */
     @Override
-    public int modify(${entity} ${entity?uncap_first}) throws SQLException {
+    public int modify(${entity} ${entity?uncap_first}) {
        return ${dao?uncap_first}.update(${entity?uncap_first});
     }
 
@@ -68,10 +64,9 @@ public class ${className} implements ${service} {
      * 保存
      * @param ${entity?uncap_first}
      * @return
-     * @throws SQLException
      */
     @Override
-    public int save(${entity} ${entity?uncap_first}) throws SQLException {
+    public int save(${entity} ${entity?uncap_first}) {
        return ${dao?uncap_first}.insert(${entity?uncap_first});
     }
 
@@ -79,10 +74,9 @@ public class ${className} implements ${service} {
      * 根据${primaryKey.filedName}删除
      * @param ${primaryKey.filedName}
      * @return
-     * @throws SQLException
      */
     @Override
-    public int remove(${primaryKey.dataType} ${primaryKey.filedName}) throws SQLException {
+    public int remove(${primaryKey.dataType} ${primaryKey.filedName}) {
        return ${dao?uncap_first}.delete(${primaryKey.filedName});
     }
 
@@ -90,10 +84,9 @@ public class ${className} implements ${service} {
      * 批量删除
      * @param ${primaryKey.filedName+"s"}
      * @return
-     * @throws SQLException
      */
     @Override
-    public int batchRemove(${primaryKey.dataType}[] ${primaryKey.filedName+"s"}) throws SQLException {
+    public int batchRemove(${primaryKey.dataType}[] ${primaryKey.filedName+"s"}) {
        return ${dao?uncap_first}.batchDelete(${primaryKey.filedName+"s"});
     }
 }
