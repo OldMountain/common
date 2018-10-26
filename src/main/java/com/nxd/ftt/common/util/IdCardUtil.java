@@ -21,13 +21,6 @@ import java.util.regex.Pattern;
  */
 public class IdCardUtil {
 
-    private static String URL = "http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2017/";
-
-    private static Pattern PATTERN = Pattern.compile("<td><a href='[0-9,/]*\\.html'>[\u4e00-\u9fa5]+<br/>");
-
-    private static List<Map<String, String>> list = new ArrayList<>();
-
-
     /**
      * 根据身份证号获取星座
      *
@@ -46,51 +39,6 @@ public class IdCardUtil {
             builder.insert(6, "19");
         }
         return builder.toString();
-    }
-
-    public static String getProvince() {
-        List<Map<String, String>> provinces = getContent(URL + "index.html", 0, 3);
-        System.out.println(provinces.size());
-        return "";
-    }
-
-    public static void main(String[] args) {
-        getProvince();
-    }
-
-    public static List<Map<String, String>> getContent(String link, int count, int endCount) {
-        try {
-            count++;
-
-            URL url = new URL(link);
-            URLConnection con = url.openConnection();
-            con.connect();
-            InputStream in = con.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in, "gbk"));
-            StringBuilder builder = new StringBuilder();
-            String chars = "";
-            while ((chars = reader.readLine()) != null) {
-                builder.append(chars);
-            }
-            String content = builder.toString();
-            Matcher matcher = PATTERN.matcher(content);
-            while (matcher.find()) {
-                String g = matcher.group();
-                String subLink = g.substring(g.indexOf("'") + 1, g.lastIndexOf("'"));
-                System.out.println(subLink);
-                if (count == endCount) {
-                    Map<String, String> codeMap = new HashMap<>();
-                    codeMap.put(subLink.substring(subLink.indexOf("/") + 1, subLink.indexOf(".html")), subLink);
-                    list.add(codeMap);
-                    break;
-                } else {
-                    getContent(URL + subLink, count, endCount);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return list;
     }
 
 }
