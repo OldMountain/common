@@ -75,6 +75,16 @@ public abstract class AddressUtil {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            try {
+                reOpenConn(link, reader, in, builder);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                AddressCode code = new AddressCode();
+                code.setLevel(count);
+                code.setName(link);
+                code.setParentId(parentId);
+                process(code);
+            }
         } finally {
             try {
                 in.close();
@@ -107,7 +117,7 @@ public abstract class AddressUtil {
 //                    codeMap.put(subLink.substring(subLink.indexOf("/") + 1, subLink.indexOf(".html")), tempName);
                     process(code);
                     list.add(code);
-                    break;
+                    continue;
                 }
                 String subLink = g.substring(g.indexOf("'") + 1, g.lastIndexOf("'"));
                 String tempName = name + g.split("'>")[1].split("</a>")[0];
@@ -123,7 +133,7 @@ public abstract class AddressUtil {
                 list.add(code);
                 String subUrl = link;
                 subUrl = subUrl.substring(0, subUrl.lastIndexOf("/") + 1) + subLink;
-                getContent(subUrl, count, endCount, tempName, parentId);
+                getContent(subUrl, count, endCount, tempName, code.getId());
             }
         }
 
@@ -132,5 +142,29 @@ public abstract class AddressUtil {
 
     public static String getURL() {
         return URL;
+    }
+
+    public void reOpenConn(String link, BufferedReader reader, InputStream in, StringBuilder builder) {
+        try {
+            Thread.sleep(10 * 1000);
+            URL url = new URL(link);
+            URLConnection con = url.openConnection();
+            //连接超时
+            con.setConnectTimeout(10 * 1000);
+            //网络访问超时
+            con.setReadTimeout(10 * 1000);
+            con.setDoInput(true);
+            con.setDoOutput(true);
+            con.connect();
+            in = con.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(in, "gbk"));
+            builder = new StringBuilder();
+            String chars = "";
+            while ((chars = reader.readLine()) != null) {
+                builder.append(chars);
+            }
+        } catch (Exception e) {
+            reOpenConn(link, reader, in, builder);
+        }
     }
 }
