@@ -14,6 +14,7 @@ import java.util.Date;
 public class DateUtils {
 
     private static DateFormat YYYY_MM_DD_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static DateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static DateFormat MM_DD_FORMAT = new SimpleDateFormat("MM-dd");
 
     public static String formateNowDay() {
@@ -25,7 +26,7 @@ public class DateUtils {
         return df.format(new Date());
     }
 
-    public static Long parse(String day){
+    public static Long parse(String day) {
         Long time = null;
         try {
             time = MM_DD_FORMAT.parse(day).getTime();
@@ -33,5 +34,15 @@ public class DateUtils {
             e.printStackTrace();
         }
         return time;
+    }
+
+    /**
+     * 格式化日期
+     * yyyy-MM-dd HH:mm:ss
+     *
+     * @return
+     */
+    public static String formatNow() {
+        return DATE_TIME_FORMAT.format(new Date());
     }
 }
