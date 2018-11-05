@@ -3,22 +3,22 @@
 <mapper namespace="${daoPackage + "."}${dao}">
     <resultMap id="BaseResultMap" type="${entityPackage + "."}${entity}">
       <#list table as row>
-        <result column="${row.columnName}" property="${row.filedName}"/>
+          <result column="${row.columnName}" property="${row.filedName}"/>
       </#list>
     </resultMap>
     <select id="list" parameterType="${entityPackage + "."}${entity}" resultMap="BaseResultMap">
         select
         <trim suffixOverrides=",">
           <#list table as row>
-            ${row.columnName},
+              ${row.columnName},
           </#list>
         </trim>
         from ${tableName}
         <where>
             <#list table as row>
-            <if test="${row.filedName} != null and ${row.filedName} !=''">
-                and ${row.columnName} = ${"#{" + row.filedName + "}"}
-            </if>
+                <if test="${row.filedName} != null and ${row.filedName} !=''">
+                    and ${row.columnName} = ${"#{" + row.filedName + "}"}
+                </if>
             </#list>
         </where>
     </select>
@@ -26,7 +26,7 @@
         select
         <trim suffixOverrides=",">
           <#list table as row>
-            ${row.columnName},
+              ${row.columnName},
           </#list>
         </trim>
         from ${tableName}
@@ -47,6 +47,10 @@
             <if test="${row.filedName} != null and ${row.filedName} !=''">
                 ${row.columnName},
             </if>
+                <#else>
+            <if test="${row.filedName} != null">
+                ${row.columnName},
+            </if>
                 </#if>
             </#list>
         </trim>
@@ -54,6 +58,10 @@
             <#list table as row>
                 <#if row.dataType != 'Date'>
             <if test="${row.filedName} != null and ${row.filedName} !=''">
+                ${"#{" + row.filedName + "}"},
+            </if>
+                <#else>
+            <if test="${row.filedName} != null">
                 ${"#{" + row.filedName + "}"},
             </if>
                 </#if>
@@ -67,6 +75,10 @@
             <#list table as row>
                 <#if row.dataType != 'Date'>
             <if test="${row.filedName} != null and ${row.filedName} !=''">
+                ${row.columnName} = ${"#{" + row.filedName + "}"},
+            </if>
+                <#else>
+            <if test="${row.filedName} != null">
                 ${row.columnName} = ${"#{" + row.filedName + "}"},
             </if>
                 </#if>
